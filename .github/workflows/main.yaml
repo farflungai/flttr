@@ -35,13 +35,20 @@ jobs:
           channel: 'stable'
           architecture: x64
 
+      # - shell: bash
+      #   env:
+      #     OWNER: ${{ secrets.OWNER }}
+      #     REPO: ${{ secrets.REPO }}
+      #     TOKEN: ${{ secrets.TOKEN }}
+      #   run: |
+      #     if cd flutter; then git pull && cd ..; else git clone "https://farflungai:$TOKEN@github.com/$OWNER/$REPO.git" && cd flutter; fi
       - shell: bash
         env:
           OWNER: ${{ secrets.OWNER }}
           REPO: ${{ secrets.REPO }}
           TOKEN: ${{ secrets.TOKEN }}
         run: |
-          if cd flutter; then git pull && cd ..; else git clone "https://farflungai:$TOKEN@github.com/$OWNER/$REPO.git" && cd flutter; fi
+          git clone "https://farflungai:$TOKEN@github.com/$OWNER/$REPO.git"
       - run: cd flutter && ls && flutter pub get
       - run: cd flutter && flutter --version
       - run: cd flutter && flutter build apk --release
@@ -56,18 +63,18 @@ jobs:
           # tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.TOKEN }}
           tag: v1.0.0
-      # - shell: bash
-      #   env:
-      #     NOTIFY_ENDPOINT: ${{ secrets.NOTIFY_ENDPOINT }}
-      #   run: |
-      #     cd flutter
-      #     COMMIT_MESSAGE=$(git log --pretty=format:"- %s" -n 1)
-      #     if [[ -z "$COMMIT_MESSAGE" ]]; then
-      #       echo "No commit message found"
-      #     else
-      #       echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_ENV
-      #       curl --location "$NOTIFY_ENDPOINT" \
-      #         --header 'Content-Type: application/json' \
-      #         --data '{ "message": "$COMMIT_MESSAGE" }'
-      #     fi
+      - shell: bash
+        env:
+          NOTIFY_ENDPOINT: ${{ secrets.NOTIFY_ENDPOINT }}
+        run: |
+          cd flutter
+          COMMIT_MESSAGE=$(git log --pretty=format:"- %s" -n 1)
+          if [[ -z "$COMMIT_MESSAGE" ]]; then
+            echo "No commit message found"
+          else
+            echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_ENV
+            curl --location "$NOTIFY_ENDPOINT" \
+              --header 'Content-Type: application/json' \
+              --data '{ "message": "$COMMIT_MESSAGE" }'
+          fi
       
