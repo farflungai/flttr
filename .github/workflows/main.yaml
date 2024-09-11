@@ -33,8 +33,8 @@ jobs:
         with:
           flutter-version: '3.24.2'
           channel: 'stable'
+          cache: true
           architecture: x64
-
       # - shell: bash
       #   env:
       #     OWNER: ${{ secrets.OWNER }}
@@ -42,23 +42,23 @@ jobs:
       #     TOKEN: ${{ secrets.TOKEN }}
       #   run: |
       #     if cd flutter; then git pull && cd ..; else git clone "https://farflungai:$TOKEN@github.com/$OWNER/$REPO.git" && cd flutter; fi
-      - run: rm -rf flutter
+      # - run: rm -rf flutter
       - shell: bash
         env:
           OWNER: ${{ secrets.OWNER }}
           REPO: ${{ secrets.REPO }}
           TOKEN: ${{ secrets.TOKEN }}
         run: |
-          git clone "https://farflungai:$TOKEN@github.com/$OWNER/$REPO.git"
-      - run: cd flutter && flutter pub get
-      - run: cd flutter && flutter --version
-      - run: cd flutter && flutter build apk --release
+          git clone "https://farflungai:$TOKEN@github.com/$OWNER/$REPO.git" .
+      - run: flutter pub get
+      - run: flutter --version
+      - run: flutter build apk --release
 
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
-          artifacts: "flutter/build/app/outputs/flutter-apk/app-release.apk"
+          artifacts: "build/app/outputs/flutter-apk/app-release.apk"
           owner: ${{ secrets.OWNER }}
           repo: ${{ secrets.REPO }}
           # tag: v1.0.${{ github.run_number }}
@@ -76,6 +76,6 @@ jobs:
             echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_ENV
             curl --location "$NOTIFY_ENDPOINT" \
               --header 'Content-Type: application/json' \
-              --data '{ "message": "$COMMIT_MESSAGE" }'
+              --data "{ \"message\": \"$COMMIT_MESSAGE\" }"
           fi
       
