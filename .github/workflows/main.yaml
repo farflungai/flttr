@@ -40,7 +40,7 @@ jobs:
           OWNER: ${{ secrets.OWNER }}
           REPO: ${{ secrets.REPO }}
         run: |
-          if cd flutter; then git pull && cd ..; else git clone git clone "https://github.com/$OWNER/$REPO.git"; fi && cd flutter
+          if cd flutter; then git pull && cd ..; else git clone "https://github.com/$OWNER/$REPO.git" && cd flutter; fi
       - run: flutter pub get
       - run: flutter --version
       - run: flutter build apk --release
