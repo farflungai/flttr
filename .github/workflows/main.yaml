@@ -76,6 +76,6 @@ jobs:
             echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> $GITHUB_ENV
             curl --location "$NOTIFY_ENDPOINT" \
               --header 'Content-Type: application/json' \
-              --data "{ 'message': '$COMMIT_MESSAGE' }"
+              --data "{ \"message\": \"$COMMIT_MESSAGE\" }"
           fi
       
