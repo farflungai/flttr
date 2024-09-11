@@ -42,15 +42,15 @@ jobs:
           TOKEN: ${{ secrets.TOKEN }}
         run: |
           if cd flutter; then git pull && cd ..; else git clone "https://farflungai:$TOKEN@github.com/$OWNER/$REPO.git" && cd flutter; fi
-      - run: flutter pub get
-      - run: flutter --version
-      - run: flutter build apk --release
+      - run: cd flutter && flutter pub get
+      - run: cd flutter && flutter --version
+      - run: cd flutter && flutter build apk --release
 
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
-          artifacts: "build/app/outputs/flutter-apk/app-release.apk"
+          artifacts: "flutter/build/app/outputs/flutter-apk/app-release.apk"
           owner: ${{ secrets.OWNER }}
           repo: ${{ secrets.REPO }}
           # tag: v1.0.${{ github.run_number }}
