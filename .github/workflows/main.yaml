@@ -49,7 +49,7 @@ jobs:
           REPO: ${{ secrets.REPO }}
           TOKEN: ${{ secrets.TOKEN }}
         run: |
-          git clone "https://farflungai:$TOKEN@github.com/$OWNER/$REPO.git" tmp && mv -r tmp/* .
+          git clone "https://farflungai:$TOKEN@github.com/$OWNER/$REPO.git" tmp && mv tmp/* .
       - run: flutter pub get
       - run: flutter --version
       - run: flutter build apk --release
