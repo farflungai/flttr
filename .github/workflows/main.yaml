@@ -35,7 +35,7 @@ jobs:
           channel: 'stable'
           architecture: x64
 
-      - run: if cd flutter; then git pull && cd ..; else git clone git clone https://github.com/${{ secrets.OWNER }}/${{ secrets.REPO }}.git; fi && cd flutter
+      - run: if cd flutter; then git pull && cd ..; else git clone git clone "https://github.com/${{ secrets.OWNER }}/${{ secrets.REPO }}.git"; fi && cd flutter
       - run: flutter pub get
       - run: flutter --version
       - run: flutter build apk --release
