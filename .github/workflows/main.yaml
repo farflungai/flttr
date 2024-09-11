@@ -42,7 +42,7 @@ jobs:
           TOKEN: ${{ secrets.TOKEN }}
         run: |
           if cd flutter; then git pull && cd ..; else git clone "https://farflungai:$TOKEN@github.com/$OWNER/$REPO.git" && cd flutter; fi
-      - run: cd flutter && flutter pub get
+      - run: cd flutter && ls && flutter pub get
       - run: cd flutter && flutter --version
       - run: cd flutter && flutter build apk --release
 
