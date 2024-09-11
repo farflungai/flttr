@@ -55,7 +55,7 @@ jobs:
           NOTIFY_ENDPOINT: ${{ secrets.NOTIFY_ENDPOINT }}
         run: |
           cd tmp
-          COMMIT_MESSAGE=$(git log --pretty=format:"- %s" -n 1)
+          COMMIT_MESSAGE=$(git log --pretty=format:"%s" -n 1)
           if [[ -z "$COMMIT_MESSAGE" ]]; then
             echo "No commit message found"
           else
