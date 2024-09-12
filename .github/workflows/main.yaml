@@ -77,7 +77,7 @@ jobs:
           repo: ${{ secrets.REPO }}
           # tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.TOKEN }}
-          tag: ${{ env.BUILD_NAME }}
+          tag: v1.0.0
       - shell: bash
         env:
           NOTIFY_ENDPOINT: ${{ secrets.NOTIFY_ENDPOINT }}
