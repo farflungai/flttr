@@ -1,5 +1,7 @@
 name: Build & Release APK for Flutter Application
 on:
+  repository_dispatch:
+    types: [trigger-workflow]
   workflow_dispatch:
     inputs:
       name:
