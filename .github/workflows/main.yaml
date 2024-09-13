@@ -36,6 +36,24 @@ jobs:
               --header 'Content-Type: application/json' \
               --data "{ \"message\": \"New commit: $COMMIT_MESSAGE\" }"
           fi
+      - shell: bash
+        env:
+          OWNER: ${{ secrets.OWNER }}
+          REPO: ${{ secrets.OVERRIDE_PACKAGE }}
+          TOKEN: ${{ secrets.TOKEN }}
+        run: |
+          cd packages
+          git clone "https://farflungai:$TOKEN@github.com/$OWNER/flutter_$REPO.git" $REPO
+          cd ..
+          echo "dependency_overrides:"       > pubspec_overrides.yaml
+          echo "  $REPO:"                   >> pubspec_overrides.yaml
+          echo "    path: packages/$REPO"   >> pubspec_overrides.yaml
+      # - name: Update version in YAML
+      #   run: sed -i 's/path: ../path: packages/g' pubspec.yaml
+      - name: create pubspec_overrides.yaml
+        working-directory: flutter_packages/packages/flutter_markdown
+        run: |
+          
       - uses: actions/setup-java@v3
         with:
           distribution: 'adopt'
