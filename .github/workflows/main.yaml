@@ -39,12 +39,13 @@ jobs:
       - run: mv tmp/* .
       - shell: bash
         env:
+          BRANCH: ${{ secrets.OVERRIDE_BRANCH_NAME }}
           OWNER: ${{ secrets.OWNER }}
           REPO: ${{ secrets.OVERRIDE_PACKAGE }}
           TOKEN: ${{ secrets.TOKEN }}
         run: |
           cd packages
-          git clone "https://farflungai:$TOKEN@github.com/$OWNER/flutter_$REPO.git" $REPO
+          git clon -b $BRANCH --single-branch "https://farflungai:$TOKEN@github.com/$OWNER/flutter_$REPO.git" $REPO
           cd ..
           echo "dependency_overrides:"       > pubspec_overrides.yaml
           echo "  $REPO:"                   >> pubspec_overrides.yaml
