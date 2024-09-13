@@ -45,7 +45,7 @@ jobs:
           TOKEN: ${{ secrets.TOKEN }}
         run: |
           cd packages
-          git clon -b $BRANCH --single-branch "https://farflungai:$TOKEN@github.com/$OWNER/flutter_$REPO.git" $REPO
+          git clone -b $BRANCH --single-branch "https://farflungai:$TOKEN@github.com/$OWNER/flutter_$REPO.git" $REPO
           cd ..
           echo "dependency_overrides:"       > pubspec_overrides.yaml
           echo "  $REPO:"                   >> pubspec_overrides.yaml
