@@ -51,10 +51,6 @@ jobs:
           echo "    path: packages/$REPO"   >> pubspec_overrides.yaml
       # - name: Update version in YAML
       #   run: sed -i 's/path: ../path: packages/g' pubspec.yaml
-      - name: create pubspec_overrides.yaml
-        working-directory: flutter_packages/packages/flutter_markdown
-        run: |
-          
       - uses: actions/setup-java@v3
         with:
           distribution: 'adopt'
