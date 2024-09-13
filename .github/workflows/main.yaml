@@ -36,6 +36,7 @@ jobs:
               --header 'Content-Type: application/json' \
               --data "{ \"message\": \"New commit: $COMMIT_MESSAGE\" }"
           fi
+      - run: mv tmp/* .
       - shell: bash
         env:
           OWNER: ${{ secrets.OWNER }}
@@ -83,7 +84,6 @@ jobs:
       #   run: |
       #     if cd flutter; then git pull && cd ..; else git clone "https://farflungai:$TOKEN@github.com/$OWNER/$REPO.git" && cd flutter; fi
       # - run: rm -rf flutter
-      - run: mv tmp/* .
       - run: flutter pub get
       - run: flutter --version
       # - run: flutter build apk --release
