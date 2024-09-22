@@ -83,7 +83,12 @@ jobs:
       # - run: rm -rf flutter
       - run: flutter pub get
       - run: flutter --version
-      # - run: flutter build apk --release
+      - name: Setup Android Keystore from Secrets
+        env:
+          ANDROID_KEYPROPERTIES_BASE_64: ${{ secrets.ANDROID_KEYPROPERTIES_BASE_64 }}
+          ANDROID_KEYSTORE_BASE_64: ${{ secrets.ANDROID_KEYSTORE_BASE_64 }}
+        run: |
+          ./scripts/android_setup.sh
       - run: flutter build apk --split-per-abi --target-platform android-arm64 --build-name $BUILD_NAME
       - name: Push to Releases
         uses: ncipollo/release-action@v1
