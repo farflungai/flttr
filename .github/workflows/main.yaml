@@ -107,4 +107,17 @@ jobs:
           curl --location "$NOTIFY_ENDPOINT" \
             --header 'Content-Type: application/json' \
             --data "{ \"message\": \"Release ($BUILD_NAME) is ready for download\" }"
-      
+      - name: Configure AWS CLI for Cloudflare R2
+        env:
+          R2_ACCESS_KEY: ${{ secrets.R2_ACCESS_KEY }}
+          R2_SECRET_KEY: ${{ secrets.R2_SECRET_KEY }}
+        run: |
+          aws configure set aws_access_key_id $R2_ACCESS_KEY
+          aws configure set aws_secret_access_key $R2_SECRET_KEY
+          aws configure set default.region auto
+      - name: Upload to Cloudflare R2
+        env:
+          CLOUDFLARE_R2_BUCKET: ${{ secrets.CLOUDFLARE_R2_BUCKET }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          aws s3 cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk s3://$CLOUDFLARE_R2_BUCKET/ --endpoint-url=https://$CLOUDFLARE_ACCOUNT_ID.r2.cloudflarestorage.com
