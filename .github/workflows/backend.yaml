@@ -50,8 +50,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: .
-          file: python-app/Dockerfile
+          context: python-app/
           platforms: linux/amd64
           push: true
           tags: ffapionline-gar/backend-python-app:latest
