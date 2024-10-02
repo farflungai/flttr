@@ -60,12 +60,14 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
       - name: Configure gcloud
         shell: bash
-        with:
+        env:
           GKE_CLUSTER_NAME: ${{ secrets.GKE_CLUSTER_NAME }}
           GCP_REGION: ${{ secrets.GCP_REGION }}
         run: |
           gcloud components install gke-gcloud-auth-plugin
           gcloud container clusters get-credentials $GKE_CLUSTER_NAME --region $GCP_REGION
       - name: Deploy to GKE
+        env:
+          DEPLOYMENT_NAME: backend-python-app-deployment-from-ui
         run: |
-          kubectl rollout restart deployment backend-python-app-deployment-from-ui
+          kubectl rollout restart deployment $DEPLOYMENT_NAME
