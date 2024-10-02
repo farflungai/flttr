@@ -53,4 +53,4 @@ jobs:
           context: python-app/
           platforms: linux/amd64
           push: true
-          tags: ffapionline-gar/backend-python-app:latest
+          tags: "${{ secrets.GAR_DOCKER_IMAGE }}:latest"
