@@ -52,7 +52,7 @@ jobs:
         with:
           context: python-app/
           platforms: linux/amd64
-          push: true
+          push: false
           tags: "${{ secrets.GAR_DOCKER_IMAGE }}:latest"
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v2
