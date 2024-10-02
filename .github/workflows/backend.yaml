@@ -1,7 +1,7 @@
 name: backend
 on:
   repository_dispatch:
-    types: [trigger-workflow]
+    types: [trigger-backend-deploy]
   workflow_dispatch:
 jobs:
   build:
@@ -52,7 +52,7 @@ jobs:
         with:
           context: python-app/
           platforms: linux/amd64
-          push: false
+          push: true
           tags: "${{ secrets.GAR_DOCKER_IMAGE }}:latest"
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v2
