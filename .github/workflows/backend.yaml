@@ -59,6 +59,7 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
       - name: Configure gcloud
+        shell: bash
         with:
           GKE_CLUSTER_NAME: ${{ secrets.GKE_CLUSTER_NAME }}
           GCP_REGION: ${{ secrets.GCP_REGION }}
