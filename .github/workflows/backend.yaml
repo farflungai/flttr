@@ -66,8 +66,13 @@ jobs:
         run: |
           gcloud components install gke-gcloud-auth-plugin
           gcloud container clusters get-credentials $GKE_CLUSTER_NAME --region $GCP_REGION
+      # - name: Deploy to GKE
+      #   env:
+      #     DEPLOYMENT_NAME: backend-python-app-deployment-from-ui
+      #   run: |
+      #     kubectl rollout restart deployment $DEPLOYMENT_NAME
       - name: Deploy to GKE
         env:
-          DEPLOYMENT_NAME: backend-python-app-deployment-from-ui
+          FILE: python-app/kustomization.yaml
         run: |
-          kubectl rollout restart deployment $DEPLOYMENT_NAME
+          kubectl apply -f $FILE
