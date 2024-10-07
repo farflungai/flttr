@@ -76,3 +76,4 @@ jobs:
           FILE: python-app/kustomization.yaml
         run: |
           kubectl apply -f $FILE
+          kubectl patch deployment backend-python-app -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
