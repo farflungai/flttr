@@ -1,4 +1,4 @@
-name: Build & Release APK for Flutter Application
+name: flutter
 on:
   repository_dispatch:
     types: [trigger-workflow]
@@ -7,6 +7,14 @@ on:
       name:
         description: 'What to build'
         default: 'Android'
+      env:
+        description: 'Environment to build for'
+        required: true
+        default: 'prod'
+        type: choice
+        options:
+        - dev
+        - prod
 jobs:
   build:
     name: Build & Release
@@ -22,11 +30,12 @@ jobs:
           git clone "https://farflungai:$TOKEN@github.com/$OWNER/$REPO.git" tmp
       - shell: bash
         env:
+          ENV: ${{ github.event.client_payload.env || github.event.inputs.env }}
           NOTIFY_ENDPOINT: ${{ secrets.NOTIFY_ENDPOINT }}
         run: |
           cd tmp
           COMMIT_MESSAGE=$(git log --pretty=format:"%s" -n 1)
-          BUILD_NAME="v$(date +'%Y-%m-%d::%H:%M:%S')"
+          BUILD_NAME="v$(date +'%Y-%m-%d::%H:%M')-$ENV"
           if [[ -z "$COMMIT_MESSAGE" ]]; then
             echo "No commit message found"
           else
@@ -89,6 +98,11 @@ jobs:
           ANDROID_KEYSTORE_BASE_64: ${{ secrets.ANDROID_KEYSTORE_BASE_64 }}
         run: |
           ./scripts/android_setup.sh
+      - name: Setup assets env
+        env:
+          ENV: ${{ github.event.client_payload.env || github.event.inputs.env }}
+        run: |
+          ./scripts/override_assets_env.sh
       - run: flutter build apk --split-per-abi --target-platform android-arm64 --build-name $BUILD_NAME
       - name: Push to Releases
         uses: ncipollo/release-action@v1
@@ -99,7 +113,8 @@ jobs:
           repo: ${{ secrets.REPO }}
           # tag: v1.0.${{ github.run_number }}
           token: ${{ secrets.TOKEN }}
-          tag: v1.0.0
+          # tag: v1.0.0
+          tag: ${{ github.event.client_payload.env || github.event.inputs.env }}
       - shell: bash
         env:
           NOTIFY_ENDPOINT: ${{ secrets.NOTIFY_ENDPOINT }}
@@ -119,5 +134,12 @@ jobs:
         env:
           CLOUDFLARE_R2_BUCKET: ${{ secrets.CLOUDFLARE_R2_BUCKET }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          ENV: ${{ github.event.client_payload.env || github.event.inputs.env }}
         run: |
-          aws s3 cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk s3://$CLOUDFLARE_R2_BUCKET/ --endpoint-url=https://$CLOUDFLARE_ACCOUNT_ID.r2.cloudflarestorage.com
+          if [[ "${ENV}" == "dev" ]]; then
+            FILE="app-arm64-v8a-release-dev.apk"
+          else
+            FILE="app-arm64-v8a-release.apk"
+          fi
+          
+          aws s3 cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk s3://$CLOUDFLARE_R2_BUCKET/$FILE --endpoint-url=https://$CLOUDFLARE_ACCOUNT_ID.r2.cloudflarestorage.com
