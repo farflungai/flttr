@@ -23,11 +23,17 @@ jobs:
       - uses: actions/checkout@v3
       - shell: bash
         env:
+          ENV: ${{ github.event.client_payload.env || github.event.inputs.env }}
           OWNER: ${{ secrets.OWNER }}
           REPO: ${{ secrets.REPO }}
           TOKEN: ${{ secrets.TOKEN }}
         run: |
-          git clone "https://farflungai:$TOKEN@github.com/$OWNER/$REPO.git" tmp
+          if [[ "${ENV}" == "dev" ]]; then
+            BRANCH="dev"
+          else
+            BRANCH="main"
+          fi
+          git clone -b $BRANCH --single-branch "https://farflungai:$TOKEN@github.com/$OWNER/$REPO.git" tmp
       - shell: bash
         env:
           ENV: ${{ github.event.client_payload.env || github.event.inputs.env }}
