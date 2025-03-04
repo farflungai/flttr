@@ -54,26 +54,26 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: "${{ secrets.GAR_DOCKER_IMAGE }}:latest"
-      - name: Setup gcloud
-        uses: google-github-actions/setup-gcloud@v2
-        with:
-          project_id: ${{ secrets.GCP_PROJECT_ID }}
-      - name: Configure gcloud
-        shell: bash
-        env:
-          GKE_CLUSTER_NAME: ${{ secrets.GKE_CLUSTER_NAME }}
-          GCP_REGION: ${{ secrets.GCP_REGION }}
-        run: |
-          gcloud components install gke-gcloud-auth-plugin
-          gcloud container clusters get-credentials $GKE_CLUSTER_NAME --region $GCP_REGION
-      # - name: Deploy to GKE
+      # - name: Setup gcloud
+      #   uses: google-github-actions/setup-gcloud@v2
+      #   with:
+      #     project_id: ${{ secrets.GCP_PROJECT_ID }}
+      # - name: Configure gcloud
+      #   shell: bash
+      #   env:
+      #     GKE_CLUSTER_NAME: ${{ secrets.GKE_CLUSTER_NAME }}
+      #     GCP_REGION: ${{ secrets.GCP_REGION }}
+      #   run: |
+      #     gcloud components install gke-gcloud-auth-plugin
+      #     gcloud container clusters get-credentials $GKE_CLUSTER_NAME --region $GCP_REGION
+      # - name: Deploy to GKE - Attempt 1
       #   env:
       #     DEPLOYMENT_NAME: backend-python-app-deployment-from-ui
       #   run: |
       #     kubectl rollout restart deployment $DEPLOYMENT_NAME
-      - name: Deploy to GKE
-        env:
-          FILE: python-app/kustomization.yaml
-        run: |
-          kubectl apply -f $FILE
-          kubectl patch deployment backend-python-app -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
+      # - name: Deploy to GKE
+      #   env:
+      #     FILE: python-app/kustomization.yaml
+      #   run: |
+      #     kubectl apply -f $FILE
+      #     kubectl patch deployment backend-python-app -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
