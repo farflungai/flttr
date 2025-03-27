@@ -125,10 +125,6 @@ jobs:
         env:
           NOTIFY_ENDPOINT: ${{ secrets.NOTIFY_ENDPOINT }}
         run: |
-          if [[ "${ENV}" == "dev" ]]; then
-            mv build/app/outputs/flutter-apk/app-arm64-v8a-release.apk build/app/outputs/flutter-apk/app-arm64-v8a-release-dev.apk
-          fi
-          
           curl --location "$NOTIFY_ENDPOINT" \
             --header 'Content-Type: application/json' \
             --data "{ \"message\": \"Release ($BUILD_NAME) is ready for download\" }"
@@ -161,8 +157,8 @@ jobs:
           r2-secret-access-key: ${{ secrets.R2_SECRET_KEY }}
           r2-bucket: ${{ secrets.CLOUDFLARE_R2_BUCKET }}
           source-dir: build/app/outputs/flutter-apk
-          destination-dir: ./ # Can be anything as long as it is an actual path
-          output-file-url: true # defaults to true
+          destination-dir: ${{ github.event.client_payload.env || github.event.inputs.env }} # Can be anything as long as it is an actual path
+          output-file-url: false # defaults to true
           multipart-size: 100 # If the file size is greater than the value provided here, then use multipart upload
           max-retries: 5 # The maximum number of retries it takes to upload a multipart chunk until it moves on to the next part
           multipart-concurrent: true # Whether to concurrently upload a multipart chunk
