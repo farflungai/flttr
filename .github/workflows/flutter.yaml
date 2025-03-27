@@ -150,24 +150,16 @@ jobs:
           
       #     aws s3 cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk s3://$CLOUDFLARE_R2_BUCKET/$FILE --endpoint-url=https://$CLOUDFLARE_ACCOUNT_ID.r2.cloudflarestorage.com
 
-      # - uses: ryand56/r2-upload-action@latest # attempt 2
-      #   with:
-      #     r2-account-id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-      #     r2-access-key-id: ${{ secrets.R2_ACCESS_KEY }}
-      #     r2-secret-access-key: ${{ secrets.R2_SECRET_KEY }}
-      #     r2-bucket: ${{ secrets.CLOUDFLARE_R2_BUCKET }}
-      #     source-dir: build/app/outputs/flutter-apk
-      #     destination-dir: ./ # Can be anything as long as it is an actual path
-      #     output-file-url: true # defaults to true
-      #     multipart-size: 100 # If the file size is greater than the value provided here, then use multipart upload
-      #     max-retries: 5 # The maximum number of retries it takes to upload a multipart chunk until it moves on to the next part
-      #     multipart-concurrent: true # Whether to concurrently upload a multipart chunk
-      #     keep-file-fresh: true # defaults to false
-      - uses: randomairborne/r2-release@main
+      - uses: ryand56/r2-upload-action@latest # attempt 2
         with:
-          endpoint: https://${{ secrets.CLOUDFLARE_ACCOUNT_ID }}.r2.cloudflarestorage.com
-          accesskeyid: ${{ secrets.R2_ACCESS_KEY }}
-          secretaccesskey: ${{ secrets.CLOUDFLARE_R2_BUCKET }}
-          bucket: ${{ secrets.CLOUDFLARE_R2_BUCKET }}
-          file: './build/app/outputs/flutter-apk/app-arm64-v8a-release.apk'
-          destination: './app-arm64-v8a-release-dev.apk'
+          r2-account-id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          r2-access-key-id: ${{ secrets.R2_ACCESS_KEY }}
+          r2-secret-access-key: ${{ secrets.R2_SECRET_KEY }}
+          r2-bucket: ${{ secrets.CLOUDFLARE_R2_BUCKET }}
+          source-dir: build/app/outputs/flutter-apk
+          destination-dir: ./ # Can be anything as long as it is an actual path
+          output-file-url: true # defaults to true
+          multipart-size: 100 # If the file size is greater than the value provided here, then use multipart upload
+          max-retries: 5 # The maximum number of retries it takes to upload a multipart chunk until it moves on to the next part
+          multipart-concurrent: true # Whether to concurrently upload a multipart chunk
+          keep-file-fresh: true # defaults to false
