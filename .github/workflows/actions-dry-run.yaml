@@ -1,0 +1,49 @@
+name: actions-dry-run
+# This GitHub Actions workflow is designed for a dry run to test the Docker build and push process
+# without deploying to a Kubernetes cluster. It will authenticate to Google Cloud, build a Docker image,
+# and push it to Google Artifact Registry (GAR). This is useful for validating the build process
+# and ensuring that the Docker image can be built and pushed successfully before integrating it into
+# a full deployment pipeline. This workflow does not deploy to GKE or perform any kubectl operations.
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    name: Build & Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v1
+        with:
+          token_format: access_token
+          credentials_json: ${{ secrets.GKE_GITHUB_ACTIONS_SA_KEY }}
+      - name: Login to GAR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.GAR_REGISTRY }}
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: python-app/
+          platforms: linux/amd64
+          push: true
+          tags: "${{ secrets.GAR_DOCKER_IMAGE }}:latest"
+      - name: Setup gcloud
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+      - name: Configure gcloud
+        shell: bash
+        env:
+          GKE_CLUSTER_NAME: ${{ secrets.GKE_CLUSTER_NAME }}
+          GCP_REGION: ${{ secrets.GCP_REGION }}
+        run: |
+          gcloud components install gke-gcloud-auth-plugin
+          gcloud container clusters get-credentials $GKE_CLUSTER_NAME --region $GCP_REGION
+      - name: Test kubectl
+        run: |
+          kubectl auth whoami
