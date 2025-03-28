@@ -39,4 +39,5 @@ jobs:
           gcloud container clusters get-credentials $GKE_CLUSTER_NAME --region $GCP_REGION
       - name: Test kubectl
         run: |
-          kubectl auth whoami
+          # kubectl auth whoami
+          kubectl get deployments.apps
