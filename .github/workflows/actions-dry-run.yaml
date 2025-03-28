@@ -25,13 +25,6 @@ jobs:
           registry: ${{ secrets.GAR_REGISTRY }}
           username: oauth2accesstoken
           password: ${{ steps.auth.outputs.access_token }}
-      - name: Build and push
-        uses: docker/build-push-action@v6
-        with:
-          context: python-app/
-          platforms: linux/amd64
-          push: true
-          tags: "${{ secrets.GAR_DOCKER_IMAGE }}:latest"
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v2
         with:
