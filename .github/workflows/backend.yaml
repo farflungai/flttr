@@ -67,7 +67,7 @@ jobs:
           context: python-app/
           platforms: linux/amd64
           push: true
-          tags: "${{ secrets.GAR_DOCKER_IMAGE }}:latest"
+          tags: "${{ secrets.GAR_DOCKER_IMAGE }}-${{ github.event.client_payload.env || github.event.inputs.env }}:latest"
       - name: Setup gcloud
         uses: google-github-actions/setup-gcloud@v2
         with:
@@ -89,5 +89,5 @@ jobs:
         env:
           DEPLOYMENT: backend-python-app-${{ github.event.client_payload.env || github.event.inputs.env }}
         run: |
-          kubectl apply -f python-app/k8s/$DEPLOYMENT
+          kubectl apply -f python-app/k8s/$DEPLOYMENT.yaml
           kubectl patch deployment $DEPLOYMENT -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
