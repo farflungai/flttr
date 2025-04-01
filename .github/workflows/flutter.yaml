@@ -16,6 +16,11 @@ on:
         description: git ref
         required: true
         default: main
+# If another release happens while this workflow is still running,
+# cancel the earlier run in favor of the next run.
+concurrency:
+  group: ${{ github.event.client_payload.env || github.event.inputs.env }}
+  cancel-in-progress: true
 jobs:
   build:
     name: Build & Release
