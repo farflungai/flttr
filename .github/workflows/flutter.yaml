@@ -103,6 +103,8 @@ jobs:
       #   run: |
       #     if cd flutter; then git pull && cd ..; else git clone "https://farflungai:$TOKEN@github.com/$OWNER/$REPO.git" && cd flutter; fi
       # - run: rm -rf flutter
+      - name: Clear pub cache
+        run: flutter pub cache repair
       - run: flutter pub get
       - run: flutter --version
       - name: Setup Android Keystore from Secrets
