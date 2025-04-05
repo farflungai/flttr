@@ -65,7 +65,7 @@ jobs:
           BRANCH: ${{ secrets.OVERRIDE_BRANCH_NAME }}
           OWNER: ${{ secrets.OWNER }}
           REPO: ${{ secrets.OVERRIDE_PACKAGE }}
-          REPO_2: flutter_awesome_notifications
+          REPO_2: awesome_notifications
           TOKEN: ${{ secrets.TOKEN }}
         run: |
           cd packages
