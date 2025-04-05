@@ -162,7 +162,6 @@ jobs:
       #     fi
           
       #     aws s3 cp build/app/outputs/flutter-apk/app-arm64-v8a-release.apk s3://$CLOUDFLARE_R2_BUCKET/$FILE --endpoint-url=https://$CLOUDFLARE_ACCOUNT_ID.r2.cloudflarestorage.com
-
       - uses: ryand56/r2-upload-action@latest # attempt 2
         with:
           r2-account-id: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
@@ -176,3 +175,7 @@ jobs:
           max-retries: 5 # The maximum number of retries it takes to upload a multipart chunk until it moves on to the next part
           multipart-concurrent: true # Whether to concurrently upload a multipart chunk
           keep-file-fresh: true # defaults to false
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
