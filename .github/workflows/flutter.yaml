@@ -65,14 +65,18 @@ jobs:
           BRANCH: ${{ secrets.OVERRIDE_BRANCH_NAME }}
           OWNER: ${{ secrets.OWNER }}
           REPO: ${{ secrets.OVERRIDE_PACKAGE }}
+          REPO_2: flutter_awesome_notifications
           TOKEN: ${{ secrets.TOKEN }}
         run: |
           cd packages
           git clone -b $BRANCH --single-branch "https://farflungai:$TOKEN@github.com/$OWNER/flutter_$REPO.git" $REPO
+          git clone -b $BRANCH --single-branch "https://farflungai:$TOKEN@github.com/$OWNER/flutter_$REPO_2.git" $REPO_2
           cd ..
           echo "dependency_overrides:"       > pubspec_overrides.yaml
           echo "  $REPO:"                   >> pubspec_overrides.yaml
           echo "    path: packages/$REPO"   >> pubspec_overrides.yaml
+          echo "  $REPO_2:"                 >> pubspec_overrides.yaml
+          echo "    path: packages/$REPO_2" >> pubspec_overrides.yaml
       # - name: Update version in YAML
       #   run: sed -i 's/path: ../path: packages/g' pubspec.yaml
       - uses: actions/setup-java@v3
