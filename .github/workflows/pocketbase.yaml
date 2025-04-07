@@ -37,6 +37,7 @@ jobs:
         run: |
           git clone -b $BRANCH_OR_TAG --single-branch "https://farflungai:$TOKEN@github.com/$OWNER/$REPO.git" tmp
       - run: mv tmp/* .
+      - run: ls -la
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Authenticate to Google Cloud
@@ -54,7 +55,7 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: /
+          context: .
           platforms: linux/amd64
           push: true
           tags: "${{ secrets.GAR_DOCKER_BASE_URL }}/pocketbase-${{ github.event.client_payload.env || github.event.inputs.env }}:latest"
