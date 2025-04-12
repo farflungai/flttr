@@ -61,7 +61,7 @@ jobs:
           registry: ${{ secrets.GAR_REGISTRY }}
           username: oauth2accesstoken
           password: ${{ steps.auth.outputs.access_token }}
-      - name: Build and push
+      - name: Build and push: python-app
         uses: docker/build-push-action@v6
         with:
           context: python-app/
@@ -85,9 +85,23 @@ jobs:
       #     DEPLOYMENT_NAME: backend-python-app-deployment-from-ui
       #   run: |
       #     kubectl rollout restart deployment $DEPLOYMENT_NAME
-      - name: Deploy to GKE
+      - name: Deploy to GKE: python-app
         env:
           DEPLOYMENT: backend-python-app-${{ github.event.client_payload.env || github.event.inputs.env }}
         run: |
           kubectl apply -f python-app/k8s/$DEPLOYMENT.yaml
+          kubectl patch deployment $DEPLOYMENT -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
+      - name: Build and push: ${{ secrets.DEPLOYMENT_NAME_2 }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          platforms: linux/amd64
+          push: true
+          tags: "${{ secrets.GAR_DOCKER_BASE_URL }}/${{ secrets.DEPLOYMENT_NAME_2 }}-${{ github.event.client_payload.env || github.event.inputs.env }}:latest"
+      - name: Deploy to GKE: ${{ secrets.DEPLOYMENT_NAME_2 }}
+        env:
+          APP: ${{ secrets.DEPLOYMENT_NAME_2 }}
+          DEPLOYMENT: backend-${{ secrets.DEPLOYMENT_NAME_2 }}-${{ github.event.client_payload.env || github.event.inputs.env }}
+        run: |
+          kubectl apply -f $APP/k8s/$DEPLOYMENT.yaml
           kubectl patch deployment $DEPLOYMENT -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
