@@ -97,7 +97,7 @@ jobs:
           context: .
           platforms: linux/amd64
           push: true
-          tags: "${{ secrets.GAR_DOCKER_BASE_URL }}/${{ secrets.DEPLOYMENT_NAME_2 }}-${{ github.event.client_payload.env || github.event.inputs.env }}:latest"
+          tags: "${{ secrets.GAR_DOCKER_BASE_URL }}/backend-${{ secrets.DEPLOYMENT_NAME_2 }}-${{ github.event.client_payload.env || github.event.inputs.env }}:latest"
       - name: Deploy to GKE - ${{ secrets.DEPLOYMENT_NAME_2 }}
         env:
           APP: ${{ secrets.DEPLOYMENT_NAME_2 }}
