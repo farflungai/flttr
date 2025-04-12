@@ -94,7 +94,7 @@ jobs:
       - name: Build and push - ${{ secrets.DEPLOYMENT_NAME_2 }}
         uses: docker/build-push-action@v6
         with:
-          context: .
+          context: ${{ secrets.DEPLOYMENT_NAME_2 }}/
           platforms: linux/amd64
           push: true
           tags: "${{ secrets.GAR_DOCKER_BASE_URL }}/backend-${{ secrets.DEPLOYMENT_NAME_2 }}-${{ github.event.client_payload.env || github.event.inputs.env }}:latest"
