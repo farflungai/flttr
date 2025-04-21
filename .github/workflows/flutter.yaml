@@ -70,6 +70,11 @@ jobs:
         run: |
           cd packages
           git clone -b $BRANCH --single-branch "https://farflungai:$TOKEN@github.com/$OWNER/flutter_$REPO.git" $REPO
+          cd shared_ui
+          echo "dependency_overrides:"       > pubspec_overrides.yaml
+          echo "  $REPO:"                   >> pubspec_overrides.yaml
+          echo "    path: ../$REPO"         >> pubspec_overrides.yaml
+          cd ..
           git clone -b $BRANCH --single-branch "https://farflungai:$TOKEN@github.com/$OWNER/flutter_$REPO_2.git" $REPO_2
           cd ..
           echo "dependency_overrides:"       > pubspec_overrides.yaml
