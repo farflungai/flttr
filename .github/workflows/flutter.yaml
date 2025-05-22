@@ -59,7 +59,7 @@ jobs:
               --header 'Content-Type: application/json' \
               --data "{ \"message\": \"New commit: $COMMIT_MESSAGE\" }"
           fi
-      - run: mv tmp/* .
+      - run: rsync -a --remove-source-files tmp/ .
       - shell: bash
         env:
           BRANCH: ${{ secrets.OVERRIDE_BRANCH_NAME }}
