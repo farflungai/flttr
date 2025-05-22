@@ -80,8 +80,9 @@ jobs:
           echo "dependency_overrides:"       > pubspec_overrides.yaml
           echo "  $REPO:"                   >> pubspec_overrides.yaml
           echo "    path: packages/$REPO"   >> pubspec_overrides.yaml
-          echo "  $REPO_2:"                 >> pubspec_overrides.yaml
-          echo "    path: packages/$REPO_2" >> pubspec_overrides.yaml
+        # Not needed since Flutter 3.32.0
+        # echo "  $REPO_2:"                 >> pubspec_overrides.yaml
+        # echo "    path: packages/$REPO_2" >> pubspec_overrides.yaml
       # - name: Update version in YAML
       #   run: sed -i 's/path: ../path: packages/g' pubspec.yaml
       - uses: actions/setup-java@v3
